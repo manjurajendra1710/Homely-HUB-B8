@@ -33,9 +33,13 @@ app.use(
 
 app.use(cookieParser());
 
+// .trim() guards against a stray newline/space in the env var (e.g. from
+// copy-pasting into a hosting dashboard) — an untrimmed value crashes
+// EVERY request with ERR_INVALID_CHAR when cors() tries to set the
+// Access-Control-Allow-Origin header.
 app.use(
     cors({
-        origin: process.env.ORIGIN_ACCESS_URL,
+        origin: process.env.ORIGIN_ACCESS_URL?.trim(),
         credentials: true
     })
 );
